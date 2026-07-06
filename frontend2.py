@@ -6,6 +6,8 @@ import plotly.express as px
 from schemas import YearEnum
 import json
 
+st.set_page_config(layout="wide")
+
 API_URL = "http://localhost:8000"
 
 YEAR = [year.value for year in YearEnum]
@@ -29,8 +31,8 @@ red_bar()
 
 st.title("Education capacity")
 
-k1, k2, k3, k4 = st.columns(4)
-with k4:
+k1, k2, k3, k4, k5, k6 = st.columns(6)
+with k6:
     year = st.selectbox("Year", YEAR, index=len(YEAR) - 1)
 
 resp = requests.get(f"{API_URL}/statistics/education_capacity", params={"year": year})
@@ -50,13 +52,16 @@ place_approval_rate = round(total_granted / total_sought_places * 100, 2)
 granted_places_per_1000 = round(total_granted / total_population * 100, 2)
 
 with k1:
-    st.metric("Population", f"{total_population:,.0f}")
-    st.metric("Number of applications", f"{total_applications:,.0f}")
+    st.metric("Population", f"{total_population / 1_000_000:.1f} M")
 with k2:
     st.metric("Sought places", f"{total_sought_places:,.0f}")
-    st.metric("Granted places", f"{total_granted:,.0f}")
 with k3:
-    st.metric("Granted places rate", f"{place_approval_rate:,.0f}")
+    st.metric("Number of applications", f"{total_applications:,.0f}")
+with k4:
+    st.metric("Granted places", f"{total_granted:,.0f}")
+with k5:
+    st.metric("Granted places rate", f"{place_approval_rate:,.1f}")
+
 fig = px.scatter(
     df,
     x="population",
