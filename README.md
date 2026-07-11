@@ -3,13 +3,11 @@
 This project analyzes application results for Swedish Higher Vocational Education (Yrkeshögskolan) programs using official data from the Swedish National Agency for Higher Vocational Education (MYH).
 The project combines education data with official demographic statistics from Statistics Sweden (SCB). Municipality and county codes are used to integrate datasets, while annual population statistics provide demographic context for the analysis. A GeoJSON file (`sweden_counties.json`) is used to visualize regional statistics on interactive maps.
 The processed data is stored in an AWS PostgreSQL database and can be queried through a FastAPI application.
----
 ## Data Sources
 The project uses data from the following official sources:
 - **Myndigheten för Yrkeshögskolan (MYH)** – application results for Higher Vocational Education programs (2020–2025).
 - **Statistics Sweden (SCB)** – municipality and county codes, as well as annual population statistics.
 - **GeoJSON administrative boundaries** – `sweden_counties.json` for geographic visualization.
----
 ## Technologies
 - Python 3.x
 - FastAPI
@@ -19,17 +17,16 @@ The project uses data from the following official sources:
 - Jupyter Notebook
 - Git
 - GitHub
----
 ## Project Structure
 ```text
 .
 ├── data/
-|   ├── processed
+|   ├── processed                            # Cleaned dataset
 │       ├── applications.csv                 # Processed application dataset
 │       ├── municipalities.csv               # Municipality reference data
 │       ├── counties.csv                     # County reference data
 │       ├── population_2020-2025.csv         # Combined population dataset
-|   ├── raw
+|   ├── raw                                  # Original datasets (MYH & SCB)
 │       ├── resultat-ansokningsomgang-2020.xlsx
 │       ├── resultat-ansokningsomgang-2021.xlsx
 │       ├── resultat-ansokningsomgang-2022.xlsx
@@ -44,11 +41,12 @@ The project uses data from the following official sources:
 ├── notebooks/
 │   └── data_preparation.ipynb               # Data cleaning and transformation
 │
-├── applications.py                         # Import application data
-├── education_capacity.py                   # Capacity analysis
-├── schemas.py                              # Database models
-├── setup.py                                # Database initialization
-├── main.py                                 # Application entry point
+├── applications.py                         # Streamlit page for applications statistics
+├── education_capacity.py                   # Streamlit page for education capacity analysis
+├── frontend.py                             # Main Streamlit application
+├── schemas.py                              # Pydantyc schemas used by FastAPI
+├── setup.py                                # Database inicialisation
+├── main.py                                 # FastAPI application
 └── README.md
 ```
 ## Geographic Data
@@ -56,7 +54,7 @@ The project uses `sweden_counties.json` (GeoJSON) to display county- and municip
 The geographic boundaries are linked with official SCB municipality and county codes, enabling spatial visualization of education capacity and application data.
 ## Data Preparation
 Data preprocessing is documented in the Jupyter notebook:
-`notebooks/data_preparation.ipynb`
+`notebooks/data_preparation.ipygit addnb`
 The notebook performs the following steps:
 - imports raw Excel files;
 - cleans and standardizes the datasets;
