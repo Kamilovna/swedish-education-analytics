@@ -6,7 +6,8 @@ from schemas import (
     CountyEnum,
     FormatEnum,
     EducationAreaEnum,
-    Application,
+    StudyPace,
+    ApplicationsResponse,
     StatisticsEducationArea,
     StatisticsProvider,
     PrincipalTypeEnum,
@@ -46,7 +47,7 @@ app = FastAPI(
 
 """,
     response_description="List of applications for vocational education",
-    response_model=list[Application],
+    response_model=ApplicationsResponse,
 )
 async def list_applications(
     format: FormatEnum = Query(
@@ -83,7 +84,7 @@ async def list_applications(
         default=None,
         description="Filter by study format",
     ),
-    study_pace_percentage: int | None = Query(
+    study_pace_percentage: StudyPace | None = Query(
         default=None,
         description="Filter by study pace percentage",
     ),
@@ -95,6 +96,7 @@ async def list_applications(
     con = get_connection()
     query = """
     SELECT
+        COUNT(*) OVER() AS total_count,
         ep.education_provider,
         c.county,
         m.municipality,
@@ -155,6 +157,13 @@ async def list_applications(
             cursor.execute(query, tuple(params))
             applications = cursor.fetchall()
 
+    if applications:
+        total_count = applications[0]["total_count"]
+        for app in applications:
+            app.pop("total_count", None)
+    else:
+        total_count = 0
+
     if format == FormatEnum.csv:
         if not applications:
             return "No applications found"
@@ -169,7 +178,7 @@ async def list_applications(
             headers={"Content-Disposition": "attachment; filename=applications.csv"},
         )
 
-    return applications
+    return {"total": total_count, "items": applications}
 
 
 @app.get(

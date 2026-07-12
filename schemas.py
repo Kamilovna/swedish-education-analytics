@@ -22,6 +22,12 @@ class FormatEnum(str, Enum):
     csv = "csv"
 
 
+class StudyPace(int, Enum):
+    FIFTY = 50
+    SEVENTY_FIVE = 75
+    ONE_HUNDRED = 100
+
+
 class CountyEnum(str, Enum):
     STOCKHOLM = "Stockholm"
     UPPSALA = "Uppsala"
@@ -83,6 +89,11 @@ class Application(BaseModel):
     is_approved: bool
     is_distance: bool
     program_length_years: float
+
+
+class ApplicationsResponse(BaseModel):
+    total: int
+    items: list[Application]
 
 
 class StatisticsEducationArea(BaseModel):

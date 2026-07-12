@@ -34,6 +34,10 @@ with col2:
         key="app_principal_type",
     )
 with col3:
+    study_pace_percentage = st.selectbox(
+        "Study pace %", [None, 50, 75, 100], key="app_study_pace_percentage"
+    )
+    is_approved = st.selectbox("Approved", ["All", "Yes", "No"], key="app_approved")
     limit = st.slider(
         "Max number of results",
         min_value=1,
@@ -41,10 +45,6 @@ with col3:
         value=20,
         key="app_limit",
     )
-    study_pace_percentage: int = st.select_slider(
-        "Study pace %", options=[50, 75, 100], key="app_study_pace_percentage"
-    )
-    is_approved = st.selectbox("Approved", ["All", "Yes", "No"], key="app_approved")
 
 if st.button("Get applications", key="btn_app"):
     params = {"limit": limit}
@@ -53,9 +53,9 @@ if st.button("Get applications", key="btn_app"):
     if county:
         params["county"] = county
     if is_distance == "Online":
-        params["is_distance"] = "True"
+        params["is_distance"] = True
     elif is_distance == "On-campus":
-        params["is_distance"] = "False"
+        params["is_distance"] = False
     if education_provider:
         params["education_provider"] = education_provider
     if municipality:
@@ -72,16 +72,16 @@ if st.button("Get applications", key="btn_app"):
         params["principal_type"] = "Region"
     elif principal_type == "Private":
         params["principal_type"] = "Privat"
-    if study_pace_percentage:
+    if study_pace_percentage is not None:
         params["study_pace_percentage"] = study_pace_percentage
 
     try:
         resp = requests.get(f"{API_URL}/applications", params=params)
         resp.raise_for_status()
         data = resp.json()
-        if data:
-            st.success(f"{len(data)} applications found")
-            st.dataframe(pd.DataFrame(data), use_container_width=True)
+        if data["items"]:
+            st.success(f"{data['total']} applications found")
+            st.dataframe(pd.DataFrame(data["items"]), use_container_width=True)
 
             export_params = {
                 key: value for key, value in params.items() if key != "limit"
