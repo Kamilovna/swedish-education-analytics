@@ -15,7 +15,7 @@ EDUCATIONAREA = [""] + [str(area_name.value) for area_name in EducationAreaEnum]
 
 
 def applications_page():
-    st.title("Applications to education")
+    st.title("Applications")
     st.subheader("Search applications")
 
     col1, col2, col3 = st.columns(3)

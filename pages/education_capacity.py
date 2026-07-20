@@ -143,7 +143,7 @@ def education_capacity_page():
     with g2:
         red_bar()
 
-        st.subheader("Granted study places per 1,000 inhabitats by county")
+        st.subheader("Granted study places per 1,000 inhabitants by county")
         st.markdown(
             "<span style='color:#E3120B;'>■</span> Darker red indicates higher education capacity",
             unsafe_allow_html=True,
