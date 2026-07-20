@@ -16,7 +16,6 @@ The project uses data from the following official sources:
 - Python 3.x
 - FastAPI
 - PostgreSQL (AWS RDS)
-- SQLAlchemy
 - Pandas
 - Jupyter Notebook
 - Git
